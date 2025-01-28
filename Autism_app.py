@@ -2,10 +2,10 @@ import streamlit as st
 import pickle as pkl
 import numpy as np
 
-encoders_file = open("/Users/vellankisuryatejareddy/Desktop/Autism-Prediction/Autism-Prediction/encoder.pkl",'rb')
+encoders_file = open("encoder.pkl",'rb')
 encoders = pkl.load(encoders_file)
 
-model_file = open("/Users/vellankisuryatejareddy/Desktop/Autism-Prediction/Autism-Prediction/autism_model.pkl",'rb')
+model_file = open("autism_model.pkl",'rb')
 model = pkl.load(model_file)
 
 def predict_autism(a1_score,a2_score,a3_score,a4_score,a5_score,a6_score,a7_score,a8_score,a9_score,a10_score,age,gender,ethnicity,jaundice,autism,country_of_residence,app_usage,result,relations):
