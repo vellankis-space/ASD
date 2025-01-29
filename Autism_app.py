@@ -29,11 +29,18 @@ def predict_autism(a1_score, a2_score, a3_score, a4_score, a5_score, a6_score, a
     return predictions
 
 def main():
-    # Inject custom CSS for the background color of the entire page
+    # Inject custom CSS for the background color of the entire page and columns
     st.markdown(""" 
         <style>
             .stApp {
                 background-color: black;
+            }
+            /* Background color for columns */
+            .stColumn {
+                background-color: #fc514e;
+                padding: 10px;
+                border-radius: 5px;
+                color: black !important;
             }
         </style>
         """, unsafe_allow_html=True)
