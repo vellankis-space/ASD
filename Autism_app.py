@@ -2,13 +2,14 @@ import streamlit as st
 import pickle as pkl
 import numpy as np
 
-encoders_file = open("encoder.pkl",'rb')
+encoders_file = open("/Users/vellankisuryatejareddy/Desktop/Autism-Prediction/encoder.pkl",'rb')
 encoders = pkl.load(encoders_file)
 
-model_file = open("autism_model.pkl",'rb')
+model_file = open("/Users/vellankisuryatejareddy/Desktop/Autism-Prediction/autism_model.pkl",'rb')
 model = pkl.load(model_file)
 
-def predict_autism(a1_score,a2_score,a3_score,a4_score,a5_score,a6_score,a7_score,a8_score,a9_score,a10_score,age,gender,ethnicity,jaundice,autism,country_of_residence,app_usage,result,relations):
+def predict_autism(a1_score, a2_score, a3_score, a4_score, a5_score, a6_score, a7_score, a8_score, a9_score, a10_score,
+                   age, gender, ethnicity, jaundice, autism, country_of_residence, app_usage, result, relations):
     encoded_ethnicity = encoders['ethnicity'].transform([ethnicity])[0]
     encoded_gender = encoders['gender'].transform([gender])[0]
     encoded_jaundice = encoders['jaundice'].transform([jaundice])[0]
@@ -18,16 +19,17 @@ def predict_autism(a1_score,a2_score,a3_score,a4_score,a5_score,a6_score,a7_scor
     encoded_relations = encoders['relation'].transform([relations])[0]
     features = [
         a1_score, a2_score, a3_score, a4_score, a5_score, a6_score, a7_score, a8_score, a9_score, a10_score,
-        age, encoded_gender, encoded_ethnicity, encoded_jaundice, encoded_autism, encoded_country, encoded_app_usage, result, encoded_relations]
+        age, encoded_gender, encoded_ethnicity, encoded_jaundice, encoded_autism, encoded_country, encoded_app_usage, result, encoded_relations
+    ]
     features_array = np.asarray(features)
-    features_array_reshaped = features_array.reshape(1,-1)
+    features_array_reshaped = features_array.reshape(1, -1)
     predictions = {}
-    for model_name , model_values in model.items():
+    for model_name, model_values in model.items():
         predictions[model_name] = model[model_name].predict(features_array_reshaped)
     return predictions
 
 def main():
-# Inject custom CSS for the background color of the columns and the container
+    # Inject custom CSS for the background color of the columns and the container
     st.markdown(""" 
         <style>
             /* Background color for columns */
@@ -37,8 +39,16 @@ def main():
                 border-radius: 5px;
                 color: black !important;
             }
+            /* Background color for the entire page */
+            .css-18e3th9 {
+                background-color: black !important;
+            }
+            .css-1d391kg {
+                background-color: black !important;
+            }
         </style>
         """, unsafe_allow_html=True)
+    
     st.title(":rainbow[Autism Spectrum Disorder Predictor]")
     st.write(":green[Please provide the required information below to predict Autism Spectrum Disorder (ASD)]:smile:")
     col1, col2, col3 = st.columns([0.33, 0.33, 0.33], gap="small")
@@ -47,9 +57,11 @@ def main():
     col10, col11, col12 = st.columns([0.33, 0.33, 0.33], gap="small")
     col13, col14, col15 = st.columns([0.33, 0.33, 0.33], gap="small")
     col16, col17, col18 = st.columns([0.33, 0.33, 0.33], gap="small")
+    
     ethnicity_list = ['Asian', 'Black', 'Hispanic', 'Latino', 'Middle Eastern', 'Pasifika', 'South Asian', 'Turkish', 'White-European', 'Others']
     relation_list = ['Self', 'Others']
-    countries = ["Afghanistan", "AmericanSamoa", "Angola", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bangladesh", "Belgium", "Bolivia", "Brazil", "Burundi", "Canada", "China", "Cyprus", "Czech Republic", "Egypt", "Ethiopia", "France", "Germany", "Hong Kong", "Iceland", "India", "Iran", "Iraq", "Ireland", "Italy", "Japan", "Jordan", "Kazakhstan", "Malaysia", "Mexico", "Netherlands", "New Zealand", "Nicaragua", "Niger", "Oman", "Pakistan", "Romania", "Russia", "Saudi Arabia", "Serbia", "Sierra Leone", "South Africa", "Spain", "Sri Lanka", "Sweden", "Tonga", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Viet Nam"]
+    countries = ["Afghanistan", "AmericanSamoa", "Angola", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bangladesh", "Belgium", "Bolivia", "Brazil", "Burundi", "Canada", "China", "Colombia", "Czech Republic", "Denmark", "Egypt", "France", "Germany", "Greece", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", "Japan", "Kenya", "Malaysia", "Mexico", "Netherlands", "New Zealand", "Nigeria", "Norway", "Pakistan", "Philippines", "Poland", "Portugal", "Russia", "Saudi Arabia", "Singapore", "South Africa", "South Korea", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand", "Turkey", "Uganda", "United Kingdom", "United States", "Vietnam"]
+
     with col1:
         a1_score = st.radio(":one: A1_Score", [0, 1], key=1)
     with col2:
@@ -87,13 +99,15 @@ def main():
     with col18:
         result = st.number_input('Enter the Result', value=None, placeholder='Result', key=18)
     relations = st.selectbox("Relation :family:", options=relation_list, key=19)
+    
     st.markdown('<br></br>', unsafe_allow_html=True)
+    
     diagnosis = {}
     if st.button("Predict", type="primary", icon="💡"):
-        diagnosis=predict_autism(a1_score,a2_score,a3_score,a4_score,a5_score,a6_score,a7_score,a8_score,a9_score,a10_score,age,gender,ethnicity,jaundice,autism,country_of_residence,app_usage,result,relations)
-    for model_name , prediction in diagnosis.items():
+        diagnosis = predict_autism(a1_score, a2_score, a3_score, a4_score, a5_score, a6_score, a7_score, a8_score, a9_score, a10_score,age, gender, ethnicity, jaundice, autism, country_of_residence, app_usage, result, relations)
+    
+    for model_name, prediction in diagnosis.items():
         st.success(f"Result: \n {model_name}:{prediction}")
-
 
 if __name__ == '__main__':
     main()
